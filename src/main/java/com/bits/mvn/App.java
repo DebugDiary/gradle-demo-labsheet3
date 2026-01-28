@@ -1,69 +1,19 @@
-
 package com.bits.mvn;
-
-
-
 import org.apache.logging.log4j.Logger;
-
 import org.apache.logging.log4j.LogManager;
-
-
-
 public class App {
-
     private static Logger logger = LogManager.getLogger(App.class);
-
-    // Unused variable (Task 3 requirement)
-
-    private String name = "Hello"; 
-
-
+    private String name = "Hello"; // Code Smell: Unused variable
 
     public String greet(String name) {
-
-        return "hello " + name + "!";
-
+        return "hello" + name + "!";
     }
 
-
-
-    public static void main(String[] args) {
-
+    public static void main(String args[]){
         App app = new App();
-
-        
-
-        // This line causes a "Divide by Zero" error (Task 3 requirement)
-
-        // We wrap it in try-catch so it doesn't crash your build immediately, 
-
-        // but SonarQube will still detect the bug.
-
-        try {
-
-            logger.debug(3/0);
-
-        } catch (Exception e) {
-
-           // ignore
-
+        logger.debug(3/0); // Bug: Division by zero
+        if (true) {        // Code Smell: Always true
+            logger.info(app.greet(args[0])); 
         }
-
-
-
-        // Conditional always true (Task 3 requirement)
-
-        if (true) {
-
-            if(args.length > 0) {
-
-                logger.info(app.greet(args[0]));
-
-            }
-
-        }
-
     }
-
 }
-
