@@ -1,7 +1,7 @@
 plugins {
     id 'java'
     id 'jacoco'
-    // UPDATED: Version 5.x is required for Gradle 9 compatibility
+    // This version 5.0.0.4638 is MANDATORY for Gradle 9 to work
     id 'org.sonarqube' version '5.0.0.4638' 
 }
 
