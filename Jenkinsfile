@@ -2,29 +2,38 @@ pipeline {
     agent any
 
     tools {
-        // Ensure you have "Gradle" configured in Global Tool Configuration
         gradle 'gradle' 
     }
 
     stages {
         stage('Checkout') {
             steps {
-                // Pulls code from your specific GitHub repository 
-                git branch: 'main', url: 'https://github.com/DebugDiary/gradle-demo-labsheet3.git' [cite: 85]
+                // Pulls your code from the repo seen in your error message
+                git branch: 'main', url: 'https://github.com/DebugDiary/gradle-demo-labsheet3.git'
             }
         }
 
         stage('Build & Test') {
             steps {
-                // Runs the clean and test tasks while generating the JAR [cite: 89, 93]
-                sh 'gradle clean build' [cite: 72]
+                // Runs build, tests, and generates JaCoCo reports for Task 1 & 2 [cite: 72, 89]
+                sh 'gradle clean build jacocoTestReport'
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            steps {
+                // Task 3: Executes SonarQube scan using the JaCoCo reports [cite: 103, 104]
+                // Make sure "sonar" matches your Global Tool Configuration name for SonarScanner
+                withSonarQubeEnv('SonarQube') { 
+                    sh 'gradle sonar'
+                }
             }
         }
 
         stage('Archive Artifact') {
             steps {
-                // Archives the generated JAR file from the build directory [cite: 91, 92]
-                archiveArtifacts artifacts: 'build/libs/*.jar', fingerprint: true [cite: 93, 98]
+                // Task 2: Archives the generated JAR file [cite: 91, 92]
+                archiveArtifacts artifacts: 'build/libs/*.jar', fingerprint: true
             }
         }
     }
