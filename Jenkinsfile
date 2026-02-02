@@ -1,37 +1,31 @@
 pipeline {
     agent any
 
+    tools {
+        // Ensure you have "Gradle" configured in Global Tool Configuration
+        gradle 'gradle' 
+    }
+
     stages {
         stage('Checkout') {
             steps {
-                checkout scm
+                // Pulls code from your specific GitHub repository 
+                git branch: 'main', url: 'https://github.com/DebugDiary/gradle-demo-labsheet3.git' [cite: 85]
             }
         }
 
         stage('Build & Test') {
             steps {
-                sh 'chmod +x gradlew'
-                sh './gradlew clean build test'
+                // Runs the clean and test tasks while generating the JAR [cite: 89, 93]
+                sh 'gradle clean build' [cite: 72]
             }
         }
 
-        /* Temporarily disabled because SonarQube plugin is missing on server.
-           Uncomment this if the plugin is installed later.
-        
-        stage('SonarQube Analysis') {
+        stage('Archive Artifact') {
             steps {
-                withSonarQubeEnv('SonarQube') { 
-                    sh './gradlew sonar'
-                }
+                // Archives the generated JAR file from the build directory [cite: 91, 92]
+                archiveArtifacts artifacts: 'build/libs/*.jar', fingerprint: true [cite: 93, 98]
             }
-        }
-        */
-    }
-
-    post {
-        always {
-            archiveArtifacts artifacts: 'build/libs/*.jar', fingerprint: true
-            junit 'build/test-results/test/*.xml'
         }
     }
 }
